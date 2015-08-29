@@ -1,28 +1,19 @@
-{service name} Nuvola Player App
+YouTube Nuvola Player App
 =============================
 
-Integration of {service name} into your linux desktop via
+Integration of YouTube into your linux desktop via
 [Nuvola Player](https://github.com/tiliado/nuvolaplayer).
  
 Support
 -------
-
-Report bugs and issues at <https://github.com/tiliado/nuvola-app-XXX/issues>.
-
+Report bugs and issues at <https://github.com/tiliado/nuvola-app-youtube/issues>.
 
 Installation
 ------------
-  * TODO: use - https://developers.google.com/youtube/iframe_api_reference
   * Execute ``make help`` to get help.
   * Execute ``make build`` to build graphics.
   * Execute ``make install`` to install files to user's local directory.
   * Don't execute ``make uninstall``. Why would you do that?
-
-
-References
------------
-
-YouTube API - https://developers.google.com/apis-explorer/#p/youtube/v3/
 
 Copyright
 ---------
@@ -37,5 +28,5 @@ Copyright
     + License: [CC-BY-3.0](./LICENSE-CC-BY.txt)
 
   - Other files:
-    + Copyright 2015 {Your Name} <{your@email}>
+    + Copyright 2015 Joel Cumberland <joel_c@zoho.com>
     + License: [2-Clause BSD-license](./LICENSE-BSD.txt)
