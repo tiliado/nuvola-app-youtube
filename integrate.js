@@ -203,8 +203,6 @@
         {
             console.log(Nuvola.format('{1}'), e);
         }
-        // TODO: Check this is safe here.
-        //this.update();
     }
 
 WebApp.start();
