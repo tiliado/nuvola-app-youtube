@@ -128,6 +128,15 @@
         for (var check in this.vPlayer)
             console.log(Nuvola.format('vPlayer has property {1}', check));
     }
+    
+    // Testing getting track info from HTML elements
+    //WebApp.getTrackInfo = function()
+    //{
+    	//var trackInfoElement = document.getElementById('watch-description-extras').childNodes[1];
+    	//var foo = trackInfoElement.getElementsByTagName('ul')[0].getElementsByTagName('li');
+    	
+    	//console.log(Nuvola.format('Got this Element {1}'), foo);
+    //}
 
     // Extract data from the web page
     WebApp.update = function()
@@ -136,9 +145,9 @@
        {
             var track = {
                 title: this.vPlayer.getVideoData().title,
-                artist: this.vPlayer.getVideoData().author,
-                album: 'YouTube.com', //TODO: regex the DNS and display, so it so which TLD it using ..
-                artLocation: window.ytplayer.config.args.iurl // TODO: Find were to get this from vPlayer varabile
+                artist: null,
+                album: null, //TODO: Find out a way to get album info
+                artLocation: window.ytplayer.config.args.iurl
             }
 
             player.setTrack(track);

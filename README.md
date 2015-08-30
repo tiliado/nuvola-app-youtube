@@ -22,11 +22,6 @@ Copyright
     + Copyright 2014-2015 Jiří Janoušek <janousek.jiri@gmail.com>
     + License: [2-Clause BSD-license](./LICENSE-BSD.txt)
 
-  - `src/icon*.svg`
-    + Copyright 2011 Alexander King <alexanderddking@gmail.com >
-    + Copyright 2011 Arturo Torres Sánchez <arturo.ilhuitemoc@gmail.com>
-    + License: [CC-BY-3.0](./LICENSE-CC-BY.txt)
-
   - Other files:
     + Copyright 2015 Joel Cumberland <joel_c@zoho.com>
     + License: [2-Clause BSD-license](./LICENSE-BSD.txt)
