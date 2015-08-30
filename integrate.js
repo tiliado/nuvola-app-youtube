@@ -128,24 +128,29 @@
         for (var check in this.vPlayer)
             console.log(Nuvola.format('vPlayer has property {1}', check));
     }
-    
-    // Testing getting track info from HTML elements
-    //WebApp.getTrackInfo = function()
-    //{
-    	//var trackInfoElement = document.getElementById('watch-description-extras').childNodes[1];
-    	//var foo = trackInfoElement.getElementsByTagName('ul')[0].getElementsByTagName('li');
-    	
-    	//console.log(Nuvola.format('Got this Element {1}'), foo);
-    //}
 
     // Extract data from the web page
     WebApp.update = function()
     {
-       try
-       {
+       	var song = null;
+       	var artist = null;
+        
+        try
+        {
+       	    var category = document.getElementById('watch-description').getElementsByClassName('title')[0].innerText;
+       	    
+       	    if (category == "Music")
+       	    {	 
+       	    	var artistMetadata = document.getElementById('watch-description').getElementsByClassName('content watch-info-tag-list')[0].innerText;
+       	    	song = artistMetadata.match('"(.*)"');
+       	    	song = song[0].replace(/"/g, '');
+       	    	artist = artistMetadata.match(/by(.*?)\(/);
+       	    	artist = artist[0].replace('by', '').replace('(', '');
+       	    }
+            
             var track = {
-                title: this.vPlayer.getVideoData().title,
-                artist: null,
+                title: song,
+                artist: artist,
                 album: null, //TODO: Find out a way to get album info
                 artLocation: window.ytplayer.config.args.iurl
             }
