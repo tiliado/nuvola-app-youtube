@@ -84,7 +84,7 @@
     }
 
     // This function checks if the YouTube API's are ready  
-    function isYouTubePlayerAPIReady()
+    WebApp.isYouTubePlayerAPIReady = function()
     {
         try
         {
@@ -100,16 +100,16 @@
     // Connects to the YouTube and gets the player-api element
     WebApp.connect = function()
     {
-        // Need to check if vPlayer object has the functions need to continue 
+        // Need to check if vPlayer object has the functions needed to continue
         // If not retry.. 
         try
         {
             this.vPlayer = window.yt.player.getPlayerByElement('player-api');
 
             // Perform a basic test, check if YouTube API is loaded
-            if (isYouTubePlayerAPIReady() == true)
+            if (this.isYouTubePlayerAPIReady())
             {
-                // Update 
+                // Update
                 this.update();
             }
             else
@@ -123,30 +123,38 @@
         {
             console.log(Nuvola.format('{1}', e));
         }
+        finally
+        {
+            // Show properties in log file
+            for (var check in this.vPlayer)
+                console.log(Nuvola.format('vPlayer loaded property {1}', check));
+        }
 
-        // Show properties in log file
-        for (var check in this.vPlayer)
-            console.log(Nuvola.format('vPlayer has property {1}', check));
     }
 
-    // Extract data from the web page
+   // Extract data from the web pagedevice_options
     WebApp.update = function()
     {
        	var song = null;
        	var artist = null;
+        var category = null;
+        var playBtn = null;
+        var pauseBtn = null;
+        var state = null;
         
         try
         {
-       	    var category = document.getElementById('watch-description').getElementsByClassName('title')[0].innerText;
-       	    
-       	    if (category == "Music")
-       	    {	 
-       	    	var artistMetadata = document.getElementById('watch-description').getElementsByClassName('content watch-info-tag-list')[0].innerText;
-       	    	song = artistMetadata.match('"(.*)"');
-       	    	song = song[0].replace(/"/g, '');
-       	    	artist = artistMetadata.match(/by(.*?)\(/);
-       	    	artist = artist[0].replace('by', '').replace('(', '');
-       	    }
+            if (document.readyState == 'complete')
+                category = document.getElementById('watch-description').getElementsByClassName('title')[0].innerText;
+            
+                if (category == "Music")
+                {
+                    var artistMetadata = document.getElementById('watch-description').getElementsByClassName('content watch-info-tag-list')[0].innerText;
+                    song = artistMetadata.match('"(.*)"');
+                    song = song[0].replace(/"/g, '');
+                    artist = artistMetadata.match(/by(.*?)\(/);
+                    artist = artist[0].replace('by', '').replace('(', '');
+                }
             
             var track = {
                 title: song,
@@ -156,9 +164,13 @@
             }
 
             player.setTrack(track);
-            var playBtn = (this.vPlayer.getPlayerState() == YT.PlayerState.PLAYING) ? false : true;
-            var pauseBtn = (this.vPlayer.getPlayerState() == YT.PlayerState.PAUSED) ? false : true;
-            var state = playBtn ? PlaybackState.PAUSED : (pauseBtn ? PlaybackState.PLAYING : PlaybackState.UNKNOWN);
+
+            if (this.isYouTubePlayerAPIReady())
+            {
+                playBtn = (this.vPlayer.getPlayerState() === YT.PlayerState.PLAYING) ? false : true;
+                pauseBtn = (this.vPlayer.getPlayerState() === YT.PlayerState.PAUSED) ? false : true;
+                state = playBtn ? PlaybackState.PAUSED : (pauseBtn ? PlaybackState.PLAYING : PlaybackState.UNKNOWN);
+            }
 
             player.setPlaybackState(state);
             player.setCanPlay(playBtn);
@@ -168,12 +180,17 @@
         }
         catch (e)
         {
-            console.log(Nuvola.format('{1}', e));
+            // We know category can return an error, if not found. This may be due the user being on the home page and no watch-description element exist
+            // In this case we ignore this error, but take other errors more seriously.
+            (category == null) ? false: console.log(Nuvola.format('{1}', e));
         }
-
-        // Schedule the next update
-        setTimeout(this.update.bind(this), 500);
+        finally
+        {
+            // Schedule the next update
+            setTimeout(this.update.bind(this), 500);
+        }
     }
+
 
     // A Handler in case we need to do anything during a navigation request e.g. update user data etc
     WebApp._onNavigationRequest = function(object, request)
