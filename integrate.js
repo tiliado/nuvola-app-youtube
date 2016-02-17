@@ -81,6 +81,7 @@
 
         // Connect (check youtube player-api is loaded correctly before updating) 
         this.connect();
+
     }
 
     // This function checks if the YouTube API's are ready  
@@ -115,7 +116,7 @@
             else
             {
                 // Wait for YouTube API to load
-                console.log(Nuvola.format('Still waiting for YouTube API to load'));
+                console.log(Nuvola.format('Still waiting for YouTube API to load')); 
                 setTimeout(this.connect.bind(this), 500);
             }
         }
@@ -123,16 +124,9 @@
         {
             console.log(Nuvola.format('{1}', e));
         }
-        finally
-        {
-            // Show properties in log file
-            for (var check in this.vPlayer)
-                console.log(Nuvola.format('vPlayer loaded property {1}', check));
-        }
-
     }
 
-   // Extract data from the web pagedevice_options
+    // Extract data from the web pagedevice_options
     WebApp.update = function()
     {
        	var song = null;
@@ -141,61 +135,90 @@
         var playBtn = null;
         var pauseBtn = null;
         var state = null;
+        var showMetaData = false;
+
         
         try
         {
-            if (document.readyState == 'complete')
-                category = document.getElementById('watch-description').getElementsByClassName('title')[0].innerText;
-            
-                if (category == "Music")
+
+            //Click the "SHOW MORE" button to get songs metadata
+            var showMoreBtn = document.getElementsByClassName('yt-uix-button');
+            for (this.i = 0; this.i < showMoreBtn.length; this.i++) 
+            { 
+                if(showMoreBtn[this.i].innerText == "SHOW MORE") 
+                { 
+                    console.log('Click the SHOW MORE button!');
+                    this.clickableBtn = showMoreBtn[this.i]; 
+                    this.clickableBtn.click();
+                    showMetaData = true;
+                    break;
+                } 
+                else
                 {
-                    var artistMetadata = document.getElementById('watch-description').getElementsByClassName('content watch-info-tag-list')[0].innerText;
-                    song = artistMetadata.match('"(.*)"');
-                    song = song[0].replace(/"/g, '');
-                    artist = artistMetadata.match(/by(.*?)\(/);
-                    artist = artist[0].replace('by', '').replace('(', '');
+                    showMetaData = false;
                 }
-            
-            var track = {
-                title: song,
-                artist: artist,
-                album: null, //TODO: Find out a way to get album info
-                artLocation: window.ytplayer.config.args.iurl
             }
 
-            player.setTrack(track);
-
-            if (this.isYouTubePlayerAPIReady())
+            if (document.readyState == 'complete' && showMetaData == true)
             {
-                playBtn = (this.vPlayer.getPlayerState() === YT.PlayerState.PLAYING) ? false : true;
-                pauseBtn = (this.vPlayer.getPlayerState() === YT.PlayerState.PAUSED) ? false : true;
-                state = playBtn ? PlaybackState.PAUSED : (pauseBtn ? PlaybackState.PLAYING : PlaybackState.UNKNOWN);
-            }
+                category = document.getElementById('watch-description-extras').getElementsByClassName('content watch-info-tag-list')[0].innerText;   
+            
+                if (category == "Music" && category != null)
+                {
+                    
+                    try
+                    {
+                        var artistMetadata = document.getElementById('watch-description').getElementsByClassName('content watch-info-tag-list')[2].innerText;
+                        
+                        song = artistMetadata.match('"(.*)"');
+                        song = song[0].replace(/"/g, '');
+                        artist = artistMetadata.match(/by(.*?)\(/);
+                        artist = artist[0].replace('by', '').replace('(', '');
+                    }
+                    catch(e)
+                    {
+                        console.log(Nuvola.format('clear song values'))
+                        song = null;
+                        artist = null
+                    }
+                    finally
+                    {
+                        console.log(Nuvola.format('set song values'))
+                        var track = {
+                            title: song,
+                            artist: artist,
+                            album: null, //TODO: Find out a way to get album info
+                            artLocation: window.ytplayer.config.args.iurl
+                        }
+                        
+                        player.setTrack(track);   
+                    }    
+                }
 
-            player.setPlaybackState(state);
-            player.setCanPlay(playBtn);
-            player.setCanPause(pauseBtn);
-            player.setCanGoNext(true);
-            player.setCanGoPrev(true);
+                if (this.isYouTubePlayerAPIReady())
+                {
+                    playBtn = (this.vPlayer.getPlayerState() === YT.PlayerState.PLAYING) ? false : true;
+                    pauseBtn = (this.vPlayer.getPlayerState() === YT.PlayerState.PAUSED) ? false : true;
+                    state = playBtn ? PlaybackState.PAUSED : (pauseBtn ? PlaybackState.PLAYING : PlaybackState.UNKNOWN);
+                }
+
+                player.setPlaybackState(state);
+                player.setCanPlay(playBtn);
+                player.setCanPause(pauseBtn);
+                player.setCanGoNext(true);
+                player.setCanGoPrev(true);
+            }
+        
         }
         catch (e)
         {
-            // We know category can return an error, if not found. This may be due the user being on the home page and no watch-description element exist
-            // In this case we ignore this error, but take other errors more seriously.
-            (category == null) ? false: console.log(Nuvola.format('{1}', e));
+            console.log(Nuvola.format('{1}', e));
         }
         finally
         {
             // Schedule the next update
             setTimeout(this.update.bind(this), 500);
         }
-    }
-
-
-    // A Handler in case we need to do anything during a navigation request e.g. update user data etc
-    WebApp._onNavigationRequest = function(object, request)
-    {
-        console.log(Nuvola.format('called onNavigationRequest()'));
     }
 
     // Handler of playback actions
