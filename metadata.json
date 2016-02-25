@@ -8,7 +8,7 @@
     "api_major": 3,
     "api_minor": 0,
     "categories": "AudioVideo;Audio;",
-    "requirements": "FlashAudioRequired",
+    "requirements": "HTML5AudioPreferred",
     "home_url": "https://www.youtube.com/feed/music"
 }
 
