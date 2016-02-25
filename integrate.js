@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Joel Cumberland <joel_c@zoho.com>
+ * Copyright 2016 Joel Cumberland <joel_c@zoho.com>
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met: 
@@ -75,8 +75,7 @@
         // Connect handler for signal ActionActivated
         Nuvola.actions.connect('ActionActivated', this);
 
-        // Inject the YouTube API frame (need to look into getting this to work with onYouTubeIframeAPIReady)
-        // https://developers.google.com/youtube/iframe_api_reference#Loading_a_Video_Player
+        // Inject the YouTube API frame
         this.inject();
 
         // Connect (check youtube player-api is loaded correctly before updating) 
@@ -116,13 +115,13 @@
             else
             {
                 // Wait for YouTube API to load
-                console.log(Nuvola.format('Still waiting for YouTube API to load')); 
+                console.log(Nuvola.format('still waiting for YouTube API to load')); 
                 setTimeout(this.connect.bind(this), 500);
             }
         }
         catch (e)
         {
-            console.log(Nuvola.format('{1}', e));
+            console.log(Nuvola.format('YouTube API connection error: {1}', e));
         }
     }
 
@@ -131,7 +130,6 @@
     {
        	var song = null;
        	var artist = null;
-        var category = null;
         var playBtn = null;
         var pauseBtn = null;
         var state = null;
@@ -147,7 +145,6 @@
             { 
                 if(showMoreBtn[this.i].innerText == "SHOW MORE") 
                 { 
-                    console.log('Click the SHOW MORE button!');
                     this.clickableBtn = showMoreBtn[this.i]; 
                     this.clickableBtn.click();
                     showMetaData = true;
@@ -161,58 +158,56 @@
 
             if (document.readyState == 'complete' && showMetaData == true)
             {
-                category = document.getElementById('watch-description-extras').getElementsByClassName('content watch-info-tag-list')[0].innerText;   
-            
-                if (category == "Music" && category != null)
+                try
                 {
+                    var videoMetadata = 
+                        document.getElementById('watch-description').getElementsByClassName('content watch-info-tag-list')[2].innerText;
                     
-                    try
-                    {
-                        var artistMetadata = document.getElementById('watch-description').getElementsByClassName('content watch-info-tag-list')[2].innerText;
-                        
-                        song = artistMetadata.match('"(.*)"');
-                        song = song[0].replace(/"/g, '');
-                        artist = artistMetadata.match(/by(.*?)\(/);
-                        artist = artist[0].replace('by', '').replace('(', '');
-                    }
-                    catch(e)
-                    {
-                        console.log(Nuvola.format('clear song values'))
-                        song = null;
-                        artist = null
-                    }
-                    finally
-                    {
-                        console.log(Nuvola.format('set song values'))
-                        var track = {
-                            title: song,
-                            artist: artist,
-                            album: null, //TODO: Find out a way to get album info
-                            artLocation: window.ytplayer.config.args.iurl
-                        }
-                        
-                        player.setTrack(track);   
-                    }    
+                    song = videoMetadata.match('"(.*)"');
+                    song = song[0].replace(/"/g, '');
+                    artist = videoMetadata.match(/by(.*?)\(/);
+                    artist = artist[0].replace('by', '').replace('(', '');
                 }
-
-                if (this.isYouTubePlayerAPIReady())
+                catch(e)
                 {
-                    playBtn = (this.vPlayer.getPlayerState() === YT.PlayerState.PLAYING) ? false : true;
-                    pauseBtn = (this.vPlayer.getPlayerState() === YT.PlayerState.PAUSED) ? false : true;
-                    state = playBtn ? PlaybackState.PAUSED : (pauseBtn ? PlaybackState.PLAYING : PlaybackState.UNKNOWN);
+                    console.log(Nuvola.format('clear video metadata values'))
+                    song = null;
+                    artist = null
                 }
-
-                player.setPlaybackState(state);
-                player.setCanPlay(playBtn);
-                player.setCanPause(pauseBtn);
-                player.setCanGoNext(true);
-                player.setCanGoPrev(true);
+                finally
+                {
+                    console.log(Nuvola.format('set video metadata values'))
+                    var track = {
+                        title: song,
+                        artist: artist,
+                        album: null, //TODO : Find a way to get artist ablum info. jrosco/nuvola-app-youtube/#4
+                        artLocation: window.ytplayer.config.args.iurl
+                    }
+                    
+                    player.setTrack(track);
+                }    
             }
+
+            if (this.isYouTubePlayerAPIReady())
+            {
+                playBtn = 
+                    (this.vPlayer.getPlayerState() === YT.PlayerState.PLAYING) ? false : true;
+                pauseBtn = 
+                    (this.vPlayer.getPlayerState() === YT.PlayerState.PAUSED) ? false : true;
+                state = 
+                    playBtn ? PlaybackState.PAUSED : (pauseBtn ? PlaybackState.PLAYING : PlaybackState.UNKNOWN);
+            }
+
+            player.setPlaybackState(state);
+            player.setCanPlay(playBtn);
+            player.setCanPause(pauseBtn);
+            player.setCanGoNext(true);
+            player.setCanGoPrev(true);
         
         }
         catch (e)
         {
-            console.log(Nuvola.format('{1}', e));
+            console.log(Nuvola.format('web update error : {1}', e));
         }
         finally
         {
@@ -238,7 +233,8 @@
                     this.vPlayer.stopVideo();
                     break;
                 case PlayerAction.TOGGLE_PLAY:
-                    (this.vPlayer.getPlayerState() == YT.PlayerState.PLAYING) ? this.vPlayer.pauseVideo(): this.vPlayer.playVideo()
+                    (this.vPlayer.getPlayerState() == 
+                        YT.PlayerState.PLAYING) ? this.vPlayer.pauseVideo(): this.vPlayer.playVideo()
                     break;
                 case PlayerAction.PREV_SONG:
                     this.vPlayer.previousVideo();

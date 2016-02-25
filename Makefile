@@ -30,7 +30,7 @@ DEST ?= $(HOME)/.local/share/nuvolaplayer3/web_apps
 ICON_SIZES ?= 16 22 24 32 48 64 128 256
 # Filenames
 INSTALL_FILES = metadata.json integrate.js
-LICENSES = LICENSE-BSD.txt LICENSE-CC-BY.txt
+LICENSES = LICENSE-BSD.txt
 SOURCE_ICON ?= src/icon.svg
 SOURCE_ICON_XS ?= src/icon-xs.svg
 SOURCE_ICON_SM ?= src/icon-sm.svg
