@@ -160,8 +160,12 @@
             {
                 try
                 {
+                    //Get music metadata position. This meatadata is always in the last postion of the element's array
+                    var countMetadata = 
+                        document.getElementById('watch-description').getElementsByClassName('watch-meta-item yt-uix-expander-body').length
+                    
                     var videoMetadata = 
-                        document.getElementById('watch-description').getElementsByClassName('content watch-info-tag-list')[2].innerText;
+                        document.getElementById('watch-description').getElementsByClassName('content watch-info-tag-list')[countMetadata - 1].innerText;
                     
                     song = videoMetadata.match('"(.*)"');
                     song = song[0].replace(/"/g, '');
