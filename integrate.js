@@ -86,15 +86,13 @@
     // This function checks if the YouTube API's are ready  
     WebApp.isYouTubePlayerAPIReady = function()
     {
-        try
-        {
-            return (YT.loaded == 1) ? true : false;
-        }
-        catch (e)
-        {
-            console.log(Nuvola.format('{1}', e));
+        try {
+            return (YT.loaded == 1) ? true : false;    
+        } catch (e) {
+            console.log(Nuvola.format('{1}', e))
             return false;
         }
+        
     }
 
     // Connects to the YouTube and gets the player-api element
@@ -138,7 +136,6 @@
         
         try
         {
-
             //Click the "SHOW MORE" button to get songs metadata
             var showMoreBtn = document.getElementsByClassName('yt-uix-button');
             for (this.i = 0; this.i < showMoreBtn.length; this.i++) 
@@ -192,22 +189,27 @@
                 }    
             }
 
-            if (this.isYouTubePlayerAPIReady())
+            if (this.isYouTubePlayerAPIReady() == true)
             {
-                playBtn = 
-                    (this.vPlayer.getPlayerState() === YT.PlayerState.PLAYING) ? false : true;
-                pauseBtn = 
-                    (this.vPlayer.getPlayerState() === YT.PlayerState.PAUSED) ? false : true;
-                state = 
-                    playBtn ? PlaybackState.PAUSED : (pauseBtn ? PlaybackState.PLAYING : PlaybackState.UNKNOWN);
-            }
+                try {
+                    playBtn = 
+                        (this.vPlayer.getPlayerState() === YT.PlayerState.PLAYING) ? false : true;
+                    pauseBtn = 
+                        (this.vPlayer.getPlayerState() === YT.PlayerState.PAUSED) ? false : true;
+                    state = 
+                        playBtn ? PlaybackState.PAUSED : (pauseBtn ? PlaybackState.PLAYING : PlaybackState.UNKNOWN);
 
-            player.setPlaybackState(state);
-            player.setCanPlay(playBtn);
-            player.setCanPause(pauseBtn);
-            player.setCanGoNext(true);
-            player.setCanGoPrev(true);
+                    player.setPlaybackState(state);
+                    player.setCanPlay(playBtn);
+                    player.setCanPause(pauseBtn);
+                    player.setCanGoNext(true);
+                    player.setCanGoPrev(true);
+
+                } catch (e) { 
+                    //Allow this exception. Means there is no vPlayer available yet e.g user is on homepage
+                }
         
+            }
         }
         catch (e)
         {
