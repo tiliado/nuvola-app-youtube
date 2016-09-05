@@ -2,14 +2,14 @@
  * Copyright 2016 Joel Cumberland <joel_c@zoho.com>
  *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met: 
- * 
+ * modification, are permitted provided that the following conditions are met:
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer. 
+ *    list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution. 
- * 
+ *    and/or other materials provided with the distribution.
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 'AS IS' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -38,7 +38,7 @@
 
     // Create new WebApp prototype
     var WebApp = Nuvola.$WebApp();
-    
+
     // Initialization routines
     WebApp._onInitWebWorker = function(emitter)
     {
@@ -71,35 +71,35 @@
     // Page is ready for magic
     WebApp._onPageReady = function()
     {
-        
+
         // Connect handler for signal ActionActivated
         Nuvola.actions.connect('ActionActivated', this);
 
         // Inject the YouTube API frame
         this.inject();
 
-        // Connect (check youtube player-api is loaded correctly before updating) 
+        // Connect (check youtube player-api is loaded correctly before updating)
         this.connect();
 
     }
 
-    // This function checks if the YouTube API's are ready  
+    // This function checks if the YouTube API's are ready
     WebApp.isYouTubePlayerAPIReady = function()
     {
         try {
-            return (YT.loaded == 1) ? true : false;    
+            return (YT.loaded == 1) ? true : false;
         } catch (e) {
             console.log(Nuvola.format('{1}', e))
             return false;
         }
-        
+
     }
 
     // Connects to the YouTube and gets the player-api element
     WebApp.connect = function()
     {
         // Need to check if vPlayer object has the functions needed to continue
-        // If not retry.. 
+        // If not retry..
         try
         {
             this.vPlayer = window.yt.player.getPlayerByElement('player-api');
@@ -113,7 +113,7 @@
             else
             {
                 // Wait for YouTube API to load
-                console.log(Nuvola.format('still waiting for YouTube API to load')); 
+                console.log(Nuvola.format('still waiting for YouTube API to load'));
                 setTimeout(this.connect.bind(this), 500);
             }
         }
@@ -133,20 +133,20 @@
         var state = null;
         var showMetaData = false;
 
-        
+
         try
         {
             //Click the "SHOW MORE" button to get songs metadata
             var showMoreBtn = document.getElementsByClassName('yt-uix-button');
-            for (this.i = 0; this.i < showMoreBtn.length; this.i++) 
-            { 
-                if(showMoreBtn[this.i].innerText == "SHOW MORE") 
-                { 
-                    this.clickableBtn = showMoreBtn[this.i]; 
+            for (this.i = 0; this.i < showMoreBtn.length; this.i++)
+            {
+                if(showMoreBtn[this.i].innerText == "SHOW MORE")
+                {
+                    this.clickableBtn = showMoreBtn[this.i];
                     this.clickableBtn.click();
                     showMetaData = true;
                     break;
-                } 
+                }
                 else
                 {
                     showMetaData = false;
@@ -158,16 +158,16 @@
                 try
                 {
                     //Get music metadata position. This meatadata is always in the last postion of the element's array
-                    var countMetadata = 
+                    var countMetadata =
                         document.getElementById('watch-description').getElementsByClassName('watch-meta-item yt-uix-expander-body').length
-                    
-                    var videoMetadata = 
+
+                    var videoMetadata =
                         document.getElementById('watch-description').getElementsByClassName('content watch-info-tag-list')[countMetadata - 1].innerText;
-                    
+
                     song = videoMetadata.match('"(.*)"');
                     song = song[0].replace(/"/g, '');
-                    artist = videoMetadata.match(/by(.*?)\(/);
-                    artist = artist[0].replace('by', '').replace('(', '');
+                    artist = videoMetadata.match(/by(.*?)\Listen/);
+                    artist = artist[0].replace('by', '').replace('Listen', '');
                 }
                 catch(e)
                 {
@@ -184,19 +184,19 @@
                         album: null, //TODO : Find a way to get artist ablum info. jrosco/nuvola-app-youtube/#4
                         artLocation: window.ytplayer.config.args.iurl
                     }
-                    
+
                     player.setTrack(track);
-                }    
+                }
             }
 
             if (this.isYouTubePlayerAPIReady() == true)
             {
                 try {
-                    playBtn = 
+                    playBtn =
                         (this.vPlayer.getPlayerState() === YT.PlayerState.PLAYING) ? false : true;
-                    pauseBtn = 
+                    pauseBtn =
                         (this.vPlayer.getPlayerState() === YT.PlayerState.PAUSED) ? false : true;
-                    state = 
+                    state =
                         playBtn ? PlaybackState.PAUSED : (pauseBtn ? PlaybackState.PLAYING : PlaybackState.UNKNOWN);
 
                     player.setPlaybackState(state);
@@ -205,10 +205,10 @@
                     player.setCanGoNext(true);
                     player.setCanGoPrev(true);
 
-                } catch (e) { 
+                } catch (e) {
                     //Allow this exception. Means there is no vPlayer available yet e.g user is on homepage
                 }
-        
+
             }
         }
         catch (e)
@@ -239,7 +239,7 @@
                     this.vPlayer.stopVideo();
                     break;
                 case PlayerAction.TOGGLE_PLAY:
-                    (this.vPlayer.getPlayerState() == 
+                    (this.vPlayer.getPlayerState() ==
                         YT.PlayerState.PLAYING) ? this.vPlayer.pauseVideo(): this.vPlayer.playVideo()
                     break;
                 case PlayerAction.PREV_SONG:
