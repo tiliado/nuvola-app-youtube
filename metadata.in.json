@@ -9,7 +9,7 @@
     "api_minor": 10, 
     "license": "2-Clause BSD-license", 
     "categories": "AudioVideo;Audio;", 
-    "requirements": "Feature[MSE]", 
+    "requirements": "Chromium[63] Feature[MSE]", 
     "home_url": "https://www.youtube.com/feed/music", 
     "build": {
         "icons": [

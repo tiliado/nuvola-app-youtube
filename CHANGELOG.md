@@ -1,7 +1,8 @@
 Changelog
 =========
 
-  * The script was adopted by Jiří Janoušek.
+  * The script was adopted by Jiří Janoušek and metadata parsing was fixed. 
+    Issue: tiliado/nuvola-app-youtube#10 tiliado/nuvola-app-youtube#11
 
 1.3 - February 12th, 2017
 -------------------------
