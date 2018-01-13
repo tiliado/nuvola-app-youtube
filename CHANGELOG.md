@@ -1,6 +1,8 @@
 Changelog
 =========
 
+  * The script was adopted by Jiří Janoušek.
+
 1.3 - February 12th, 2017
 -------------------------
 

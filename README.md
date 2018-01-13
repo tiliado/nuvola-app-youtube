@@ -2,7 +2,7 @@ YouTube (Nuvola app)
 ====================
 
 Integration of YouTube into your linux desktop via
-[Nuvola Player](https://github.com/tiliado/nuvolaplayer).
+[Nuvola Apps Runtime](https://github.com/tiliado/nuvolaruntime).
  
 Support
 -------
@@ -25,5 +25,5 @@ Copyright
     + License: [CC-BY-3.0](./LICENSE-CC-BY.txt)
 
   - Other files:
-    + Copyright 2015 Joel Cumberland <joel_c@zoho.com>
+    + Copyright 2018 Jiří Janoušek <janousek.jiri@gmail.com>
     + License: [2-Clause BSD-license](./LICENSE-BSD.txt)

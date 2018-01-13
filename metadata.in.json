@@ -1,15 +1,15 @@
 {
     "id": "youtube", 
     "name": "YouTube", 
-    "maintainer_name": "Joel Cumberland", 
-    "maintainer_link": "https://github.com/jrosco", 
+    "maintainer_name": "Jiří Janoušek", 
+    "maintainer_link": "https://github.com/fenryxo", 
     "version_major": 1, 
     "version_minor": 3, 
-    "api_major": 3, 
-    "api_minor": 0, 
+    "api_major": 4, 
+    "api_minor": 10, 
     "license": "2-Clause BSD-license", 
     "categories": "AudioVideo;Audio;", 
-    "requirements": "HTML5AudioPreferred", 
+    "requirements": "Feature[MSE]", 
     "home_url": "https://www.youtube.com/feed/music", 
     "build": {
         "icons": [
