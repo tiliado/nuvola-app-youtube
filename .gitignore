@@ -6,3 +6,9 @@ eu.tiliado.NuvolaAppYoutube.desktop
 metadata.json
 nuvola-app-youtube
 youtube.tar.gz
+/screenshots/
+eu.tiliado.NuvolaAppYoutube.service
+eu.tiliado.WebRuntimeAppYoutube.appdata.xml
+eu.tiliado.WebRuntimeAppYoutube.desktop
+eu.tiliado.WebRuntimeAppYoutube.service
+nuvola-app-youtube.metainfo.xml
