@@ -10,7 +10,7 @@
   "license": "2-Clause BSD-license",
   "categories": "AudioVideo;Audio;",
   "requirements": "Chromium[63] Codec[MP3] Feature[MSE]",
-  "home_url": "https://www.youtube.com/feed/music",
+  "home_url": "https://www.youtube.com/music",
   "build": {
     "icons": [
       "src/icon.svg SCALABLE 64 128 256",
