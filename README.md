@@ -1,4 +1,4 @@
-YouTube • Nuvola Apps Runtime
+YouTube • Nuvola Apps Runtime [![CircleCI](https://circleci.com/gh/tiliado/nuvola-app-youtube/tree/master.svg?style=svg)](https://circleci.com/gh/tiliado/nuvola-app-youtube/tree/master)
 =============================
 
 Integration of YouTube into your linux desktop via
