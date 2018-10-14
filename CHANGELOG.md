@@ -1,5 +1,8 @@
-Changelog
-=========
+YouTube Changelog
+=================
+
+2.1 - October 14th, 2018
+------------------------
 
   * The home page URL was changed. Issue: tiliado/nuvola-app-youtube#12
 
