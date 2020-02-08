@@ -1,6 +1,8 @@
 YouTube Changelog
 =================
 
+  * Mask as Safari to work around Google sign-in issues. Issue: tiliado/nuvolaruntime#575
+
 2.1 - October 14th, 2018
 ------------------------
 

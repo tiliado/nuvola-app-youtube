@@ -10,6 +10,7 @@
   "license": "2-Clause BSD-license",
   "categories": "AudioVideo;Audio;",
   "requirements": "Chromium[63] Codec[MP3] Feature[MSE]",
+  "user_agent": "SAFARI",
   "home_url": "https://www.youtube.com/music",
   "build": {
     "icons": [
