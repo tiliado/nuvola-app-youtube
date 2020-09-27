@@ -59,35 +59,44 @@
       }
       this.showMore()
 
+      var ad = this.isAdPlaying()
       var elm = null
-      elm = document.querySelectorAll('#container #collapsible #content .content')
-      if (elm && elm.length === 3) {
-        var titleAndArtist = elm[2].childNodes
-        track.title = titleAndArtist[1].data
-        track.artist = titleAndArtist[3].data
-      } else {
-        elm = document.querySelector('.ytp-title-link')
-        track.title = elm ? elm.textContent || null : null
-        elm = document.querySelector('#owner-name')
-        track.artist = elm && elm.firstElementChild ? elm.firstElementChild.textContent || null : null
+      if (!ad) {
+        elm = document.querySelectorAll('#container #collapsible #content .content.ytd-metadata-row-renderer')
+        if (elm && elm.length >= 2) {
+          track.title = elm[0].textContent || null
+          track.artist = elm[1].textContent || null
+          track.album = (elm.length === 5 && elm[2].textContent) || null
+        } else {
+          elm = document.querySelector('.ytp-title-link')
+          track.title = elm ? elm.textContent || null : null
+          elm = document.querySelector('#owner-name')
+          track.artist = elm && elm.firstElementChild ? elm.firstElementChild.textContent || null : null
+        }
+
+        elm = document.querySelector('#meta #meta-contents #top-row a img')
+        if (elm) {
+          track.artLocation = elm.src || null
+        }
       }
 
-      elm = document.querySelector('#meta #meta-contents #top-row a img')
-      if (elm) {
-        track.artLocation = elm.src || null
-      }
       var trackTime = this.trackTime()
       track.length = trackTime.total
       player.setTrack(track)
       player.setTrackPosition(trackTime.now)
 
-      var state = PlaybackState.UNKNOWN
+      var state
       var buttons = this.buttons()
-      if (buttons.play) {
+      if (ad) {
+        state = PlaybackState.UNKNOWN
+      } else if (buttons.play) {
         state = PlaybackState.PAUSED
       } else if (buttons.pause) {
         state = PlaybackState.PLAYING
+      } else {
+        state = PlaybackState.UNKNOWN
       }
+
       var volume = this.volume()
       player.updateVolume(volume)
       player.setPlaybackState(state)
@@ -240,6 +249,10 @@
     if (this.autoHidden()) {
       this._currentTime++
     }
+  }
+
+  WebApp.isAdPlaying = function () {
+    return !!document.querySelector('.video-ads.ytp-ad-module .ytp-ad-player-overlay')
   }
 
   WebApp.start()
