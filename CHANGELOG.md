@@ -1,6 +1,9 @@
 YouTube Changelog
 =================
 
+2.2 - September 28, 2020
+------------------------
+
   * Mask as Safari to work around Google sign-in issues. Issue: tiliado/nuvolaruntime#575
   * Fix parsing of track title and artist.
 
