@@ -26,14 +26,14 @@
 'use strict';
 
 (function (Nuvola) {
-  var player = Nuvola.$object(Nuvola.MediaPlayer)
-  var PlaybackState = Nuvola.PlaybackState
-  var PlayerAction = Nuvola.PlayerAction
-  var WebApp = Nuvola.$WebApp()
+  const player = Nuvola.$object(Nuvola.MediaPlayer)
+  const PlaybackState = Nuvola.PlaybackState
+  const PlayerAction = Nuvola.PlayerAction
+  const WebApp = Nuvola.$WebApp()
 
   WebApp._onInitWebWorker = function (emitter) {
     Nuvola.WebApp._onInitWebWorker.call(this, emitter)
-    var state = document.readyState
+    const state = document.readyState
     if (state === 'interactive' || state === 'complete') {
       this._onPageReady()
     } else {
@@ -50,7 +50,7 @@
 
   WebApp.update = function () {
     try {
-      var track = {
+      const track = {
         artist: null,
         album: null,
         artLocation: null,
@@ -59,8 +59,8 @@
       }
       this.showMore()
 
-      var ad = this.isAdPlaying()
-      var elm = null
+      const ad = this.isAdPlaying()
+      let elm = null
       if (!ad) {
         elm = document.querySelectorAll('#container #collapsible #content .content.ytd-metadata-row-renderer')
         if (elm && elm.length >= 2) {
@@ -80,13 +80,13 @@
         }
       }
 
-      var trackTime = this.trackTime()
+      const trackTime = this.trackTime()
       track.length = trackTime.total
       player.setTrack(track)
       player.setTrackPosition(trackTime.now)
 
-      var state
-      var buttons = this.buttons()
+      let state
+      const buttons = this.buttons()
       if (ad) {
         state = PlaybackState.UNKNOWN
       } else if (buttons.play) {
@@ -97,7 +97,7 @@
         state = PlaybackState.UNKNOWN
       }
 
-      var volume = this.volume()
+      const volume = this.volume()
       player.updateVolume(volume)
       player.setPlaybackState(state)
       player.setCanChangeVolume(volume !== null)
@@ -111,7 +111,7 @@
   }
 
   WebApp._onActionActivated = function (emitter, name, parameter) {
-    var buttons = this.buttons()
+    const buttons = this.buttons()
     switch (name) {
       case PlayerAction.TOGGLE_PLAY:
         Nuvola.clickOnElement(buttons.play || buttons.pause)
@@ -137,19 +137,20 @@
         Nuvola.clickOnElement(buttons.next)
         this.toggleAutohide()
         break
-      case PlayerAction.SEEK:
+      case PlayerAction.SEEK: {
         // This does not work!
-        var trackTime = this.trackTime()
-        var total = trackTime.total
+        const trackTime = this.trackTime()
+        const total = trackTime.total
         if (parameter >= 0 && parameter <= total) {
           Nuvola.clickOnElement(document.querySelector('#player-container .ytp-progress-list'), parameter / total, 0.5)
         }
         break
-      case PlayerAction.CHANGE_VOLUME:
-        var chromeBottom = document.querySelector('#player-container .ytp-chrome-bottom')
+      }
+      case PlayerAction.CHANGE_VOLUME: {
+        const chromeBottom = document.querySelector('#player-container .ytp-chrome-bottom')
         if (chromeBottom) {
-          var setVolume = () => {
-            var volumeSlider = document.querySelector('#player-container .ytp-volume-slider')
+          const setVolume = () => {
+            const volumeSlider = document.querySelector('#player-container .ytp-volume-slider')
             if (volumeSlider) {
               Nuvola.clickOnElement(volumeSlider, parameter, 0.5)
             }
@@ -163,13 +164,14 @@
           }
         }
         break
+      }
       default:
         throw Error('Action "' + name + '" not supported.')
     }
   }
 
   WebApp.showMore = function () {
-    var elm = document.querySelector('#meta #meta-contents #more')
+    let elm = document.querySelector('#meta #meta-contents #more')
     if (elm && !elm.hidden) {
       Nuvola.clickOnElement(elm)
     }
@@ -180,9 +182,9 @@
   }
 
   WebApp.trackTime = function () {
-    var now = document.querySelector('#player-container .ytp-time-current')
-    var total = document.querySelector('#player-container .ytp-time-duration')
-    var time = {
+    const now = document.querySelector('#player-container .ytp-time-current')
+    const total = document.querySelector('#player-container .ytp-time-duration')
+    const time = {
       now: now ? now.textContent || null : null,
       total: total ? total.textContent || null : null
     }
@@ -196,22 +198,22 @@
   }
 
   WebApp.volume = function () {
-    var elm = document.querySelector('#player-container .ytp-volume-panel')
+    const elm = document.querySelector('#player-container .ytp-volume-panel')
     return elm && elm.getAttribute('aria-valuenow') !== null ? elm.getAttribute('aria-valuenow') / 100 : null
   }
 
   WebApp.buttons = function () {
-    var buttons = {
+    const buttons = {
       play: null,
       pause: null,
       prev: null,
       next: null
     }
-    var elms = document.querySelector('#player-container .ytp-left-controls')
+    const elms = document.querySelector('#player-container .ytp-left-controls')
     if (elms) {
       buttons.prev = elms.querySelector('.ytp-prev-button')
       buttons.next = elms.querySelector('.ytp-next-button')
-      var pp = elms.querySelector('.ytp-play-button')
+      const pp = elms.querySelector('.ytp-play-button')
       if (pp) {
         if (document.querySelector('#player-container .paused-mode')) {
           buttons.play = pp
@@ -229,7 +231,7 @@
 
   WebApp.toggleAutohide = function () {
     setTimeout(() => {
-      var elm = document.querySelector('#player-container .playing-mode')
+      let elm = document.querySelector('#player-container .playing-mode')
       if (elm) {
         if (!elm.classList.contains('ytp-autohide') && !elm.classList.contains('ytp-autohide-active')) {
           elm.classList.add('ytp-autohide')
